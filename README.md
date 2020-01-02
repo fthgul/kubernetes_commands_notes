@@ -101,6 +101,32 @@ Deleting pods by deleting the whole namespace
 > **$ kubectl delete ns custom-namespacename**                                                                             
 space "custom-namespace" deleted
 
+***KEEPINGS POD HEALTHY***
+
+Creating an HTTP-Based liveness probe
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: kubia-liveness
+    spec:
+      containers:
+      - image: luksa/kubia-unhealthy //this is the image the broken app
+        name: kubia
+        livenessProbe:               // A liveness probe that will
+          httpGet:                   // perform an HTTP GET
+           path: /                   // The path to rquest in the HTTP request
+           port: 8080                // Yhe network port the probe should connect to
+           
+Create the upper's pod
+> **$ kubectl create -f kubia-liveness-probe.yaml**                                                     
+pod "kubia-liveness" created
+
+To see the liveness probe
+> **$ kubectl get pod kubia-liveness**                                                                                            
+NAME-------------READY-----STATUS----RESTARTS---AGE                                                                                  
+kubia-liveness---1/1-------Running---0----------50s                                                                                    
+
     
     
 
