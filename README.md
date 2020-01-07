@@ -127,6 +127,24 @@ To see the liveness probe
 NAME-------------READY-----STATUS----RESTARTS---AGE                                                                                  
 kubia-liveness---1/1-------Running---0----------50s                                                                                    
 
+Configuring additional properties of the liveness probe 
+> Liveness: http-get http://:8080/ delay=0s timeout=1s period=10s #success=1                                                             
+                                    ➥ #failure=3
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: kubia-liveness
+    spec:
+      containers:
+        - image: luksa/kubia-unhealthy
+        name: kubia
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15 //Kubernetes will wait 15 seconds before executing the first probe.
+
     
     
 
