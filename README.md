@@ -146,7 +146,48 @@ Configuring additional properties of the liveness probe
             initialDelaySeconds: 15 //Kubernetes will wait 15 seconds before executing the first probe.
 
     
-    
+  ***REPLICATION CONTROLLER***
+  You’re  going  to  create  a  YAML  file  called  kubia-rc.yaml 
+  
+    apiVersion: v1
+    kind: ReplicationController
+    metadata:
+      name: kubia
+    spec:
+      replicas: 3          //The desired number of pod instances
+      selector:            //The pod selector determining what pods the RC is operating on
+        app: kubia         
+    template:              //The pod template for creating new pods
+      metadata:
+        labels:
+          app: kubia
+      spec:
+        containers:
+        - name: kubia
+          image: luksa/kubia
+          ports:
+          - containerPort: 8080
+
+To  create  the  ReplicationController,  use  the  kubectl create  command
+> **kubectl create f kubia-rc.yaml**                                       
+replicationcontroller "kubia" created
+
+Seeing the ReplicationController in action
+> **kubectl get pods**                                                                                                    
+NAME-------------READY-----STATUS---------------RESTARTS---AGE                                                                            kubia-53thy------0/1-------ContainerCreatting---0----------2s                                                                     
+kubia-k0xz6------0/1-------ContainerCreatting---0----------2s                                                                  
+kubia-g3vkg------0/1-------ContainerCreatting---0----------2s                                                             
+
+Geeting information about a Replication Controller
+> **kubectl get rc**                                                                                 
+NAME------DESIRED---CURRENT---READY----AGE
+kubia-----3---------3---------2--------3m
+
+Scaling up a ReplicaitonController
+> **kubectl scale rc kubia --replicas=10**                                                                                      
+
+      
+              
 
    
 
