@@ -236,6 +236,14 @@ The main improvements  of  ReplicaSets  over  ReplicationControllers  are  their
           containers:
           - name: kubia
             image: luksa/kubia
+As in the example, each expression must contain a key, an operator, and possibly (depending on the operator) a list of values. You’ll see four valid operators:
+![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/matchLabelReplicaSet.PNG)
+
+ReplicaSet the same way you’d delete a ReplicationController:
+> **kubectl delete rs kubia**                                                                                   
+replicaset "kubia" deleted
+
+
            
 
 
