@@ -146,7 +146,7 @@ Configuring additional properties of the liveness probe
             initialDelaySeconds: 15 //Kubernetes will wait 15 seconds before executing the first probe.
 
     
-  ***REPLICATION CONTROLLER***
+  ***REPLICATION CONTROLLER***                                                                                                
   You’re  going  to  create  a  YAML  file  called  kubia-rc.yaml 
   
     apiVersion: v1
@@ -173,18 +173,73 @@ To  create  the  ReplicationController,  use  the  kubectl create  command
 replicationcontroller "kubia" created
 
 Seeing the ReplicationController in action
-> **kubectl get pods**                                                                                                    
-NAME-------------READY-----STATUS---------------RESTARTS---AGE                                                                            kubia-53thy------0/1-------ContainerCreatting---0----------2s                                                                     
-kubia-k0xz6------0/1-------ContainerCreatting---0----------2s                                                                  
-kubia-g3vkg------0/1-------ContainerCreatting---0----------2s                                                             
+> **kubectl get pods**                                                                                                                 
+NAME-------------READY-----STATUS---------------RESTARTS---AGE                                                                            kubia-53thy------0/1-------ContainerCreatting---0----------2s                                                                         
+kubia-k0xz6------0/1-------ContainerCreatting---0----------2s                                                                           
+kubia-g3vkg------0/1-------ContainerCreatting---0----------2s                                                                      
 
-Geeting information about a Replication Controller
-> **kubectl get rc**                                                                                 
-NAME------DESIRED---CURRENT---READY----AGE
-kubia-----3---------3---------2--------3m
+Geeting information about a Replication Controller       
+> **kubectl get rc**                                                                                                           
+NAME------DESIRED---CURRENT---READY----AGE                                                                         
+kubia-----3---------3---------2--------3m                                                           
 
 Scaling up a ReplicaitonController
-> **kubectl scale rc kubia --replicas=10**                                                                                      
+> **kubectl scale rc kubia --replicas=10**                                                                                        
+
+Deleting a replication controller with --cascade=false leaves pods unmanaged.                                                     
+> **$ kubectl delete rc kubia --cascade=false**                                                                                         
+replicationcontroller "kubia" deleted   
+
+***ReplicaSets***                                                                                                         
+A ReplicaSet behaves exactly like a ReplicationController, but it has more expressivepod selectors.                             
+
+    apiVersion: apps/v1beta2 //ReplicaSets aren’t part of the v1API, but belong to the apps API group and version v1beta2.
+    kind: ReplicaSet
+    metadata:
+      name: kubia
+    spec:
+      replicas: 3
+    selector:
+      matchLabels:   //You’re using the simpler matchLabels selector here, which is much like a ReplicationController’s selector.
+        app: kubia
+    template:       //The template is the same as in the ReplicationController.
+      metadata:
+        labels:
+          app: kubia
+     spec:
+      containers:
+        - name: kubia
+          image: luksa/kubia
+        
+> **kubectl create -f kubia-replicaset.yaml**                                                                          
+replicaset.apps "kubia" created
+
+The main improvements  of  ReplicaSets  over  ReplicationControllers  are  their  more expressive label selectors.
+
+    apiVersion: apps/v1beta2
+    kind: ReplicaSet
+    metadata:
+      name: kubia
+    spec:
+      replicas: 3
+      selector:
+        matchExpressions:
+          - key: app        //This selector requires the pod to contain a label with the “app” key.
+            operator: In    //The label’s value must be “kubia”.
+            values:
+             - kubia
+      template:
+        metadata:
+          labels:
+            app: kubia
+        spec:
+          containers:
+          - name: kubia
+            image: luksa/kubia
+           
+
+
+
 
       
               
