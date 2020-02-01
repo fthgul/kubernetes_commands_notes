@@ -243,6 +243,32 @@ ReplicaSet the same way you’d delete a ReplicationController:
 > **kubectl delete rs kubia**                                                                                   
 replicaset "kubia" deleted
 
+***Services***  
+kubia-svc.yaml
+
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: kubia
+    spec:
+      ports:
+      - port: 80               //The port this service will be available on
+        targetPort: 8080       //The container port the service will forward to
+      selector:           //---All pods with the app=kubia label 
+        app: kubia       // ---will be part of this service.
+        
+> **kubia create -f kubia-svc.yaml** 
+
+REMOTELY EXECUTING COMMANDS IN RUNNING CONTAINERS
+
+List  the  pods  with  the  **kubectl get pods** command and choose one as your target for the exec command (in the following example, I’ve chosen the kubia-7nog1 pod as the target). You’ll also need too btain the cluster IP of your service (using **kubectl get svc**, for example). When running the following commands yourself, be sure to replace the pod name and the service IP with your own: 
+
+> **$ kubectl exec kubia-7nog1 -- curl -s http://10.111.249.153**                                                                       
+You’ve hit kubia-gzwli
+
+
+
+
 
            
 
