@@ -308,7 +308,13 @@ KUBIA_SERVICE_PORT=80
  
  Introducing service endpoints
  
- Services don’t link to pods directly. Instead, a resource sits in between—the Endpoints resource. 
+ Services don’t link to pods directly. Instead, a resource sits in between—the Endpoints resource.
+ 
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image.png)
+ 
+ You may have probably realized this already, but having the service’s endpoints decoupled from the service allows them to be configured and updated manually.
+ 
+ 
 
 
 
