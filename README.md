@@ -266,6 +266,52 @@ List  the  pods  with  the  **kubectl get pods** command and choose one as your 
 > **$ kubectl exec kubia-7nog1 -- curl -s http://10.111.249.153**                                                                       
 You’ve hit kubia-gzwli
 
+![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/kubectl-exec.PNG)
+
+EXPOSING MULTIPLE PORTS IN THE SAME SERVICE
+
+Your service exposes only a single port, but services can also support multiple ports. For example,  if  your  pods  listened  on  two  ports - let’s  say  8080  for  HTTP  and  8443  for HTTPS—you  could  use  a  single  service  to  forward  both  port  80  and  443  to  the  pod’sports 8080 and 8443.
+
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: kubia
+    spec:
+      ports:
+      - name: http
+        port: 80            --//Port 80 is mapped-
+        targetPort: 8080    --//to the pods’ port 8080.
+      - name: https
+        port: 443          --//Port 443 is mapped-
+        targetPort: 8443   --// to pods’ port 8443.
+      selector: 
+        app: kubia         --//The label selector always applies to the whole service. 
+
+        
+     
+DISCOVERING SERVICES THROUGH ENVIRONMENT VARIABLES
+
+When a pod is started, Kubernetes initializes a set of environment variables pointing to each service that exists at that moment. If you create the service before creating the client pods, processes in those pods can get the IP address and port of the service by inspecting their environment variables.
+
+> **$ kubectl exec kubia-3inly env**                                                                                               
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin                                                                
+HOSTNAME=kubia-3inly                                                                                   
+KUBERNETES_SERVICE_HOST=10.111.240.1                                                                                            
+KUBERNETES_SERVICE_PORT=443                                                                       
+...                                                                                                                       
+KUBIA_SERVICE_HOST=10.111.249.153                                                                                                       
+KUBIA_SERVICE_PORT=80                                                                                                 
+
+**Connecting to services living outside the cluster**
+
+ Instead  of  having  the  service  redirect  connections  to pods in the cluster, you want it to redirect to external IP(s) and port(s). Client  pods  running  in  the  cluster  can  connect  to  the  external  service  like  they connect to internal services.
+ 
+ Introducing service endpoints
+ 
+ Services don’t link to pods directly. Instead, a resource sits in between—the Endpoints resource. 
+
+
+
 
 
 
