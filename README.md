@@ -310,10 +310,30 @@ KUBIA_SERVICE_PORT=80
  
  Services don’t link to pods directly. Instead, a resource sits in between—the Endpoints resource.
  
- ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image.png)
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/img1.PNG)
  
  You may have probably realized this already, but having the service’s endpoints decoupled from the service allows them to be configured and updated manually.
  
+ 
+ **Exposing services to external clients**
+ 
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image2.PNG)
+ 
+ Using a NodePort service
+ 
+  This is similar to a regular service (their actual type is ClusterIP), but a NodePort service  can be accessed not only through the  service’s internal cluster IP, but also through any node’s IP and the reserved node port.
+  
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image3.PNG) 
+ 
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image5.PNG) 
+ 
+ > **$ kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="ExternalIP")].address}'**                                 
+35.233.247.211 35.227.187.11 34.83.123.164                                                                          
+
+Once you know the IPs of your nodes, you can try accessing your service through them:
+
+>**$ curl http://35.233.247.211:30123**                                                                                
+You've hit kubia-vfgnh                                                                                      
  
 
 
