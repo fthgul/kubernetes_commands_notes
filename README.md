@@ -333,7 +333,21 @@ KUBIA_SERVICE_PORT=80
 Once you know the IPs of your nodes, you can try accessing your service through them:
 
 >**$ curl http://35.233.247.211:30123**                                                                                
-You've hit kubia-vfgnh                                                                                      
+You've hit kubia-vfgnh                                                                                                    
+
+But if you only point your clients to the first node, when that node fails, your clients can’t access the service anymore. That’s why it makes sense to put a load balancer in frontof the nodes to make sure you’re spreading requests across all healthy nodes and never sending them to a node that’s offline at that moment.
+
+Exposing a service through an external load balancer
+
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image4.PNG) 
+ 
+ > **$ kubectl get svc kubia-loadbalancer**
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image6.PNG) 
+ 
+ ![](https://github.com/fthgul/kubernetes_commands_notes/blob/master/image7.PNG) 
+ 
+
+
  
 
 
